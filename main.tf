@@ -101,6 +101,7 @@ resource "aws_iam_role" "default" {
 
 resource "aws_instance" "default" {
   #bridgecrew:skip=BC_AWS_GENERAL_31: Skipping `Ensure Instance Metadata Service Version 1 is not enabled` check until BridgeCrew supports conditional evaluation. See https://github.com/bridgecrewio/checkov/issues/793
+  #bridgecrew:skip=BC_AWS_GENERAL_68: Skipping `Ensure that EC2 is EBS Optimized`
   count                       = local.instance_count
   ami                         = local.ami
   availability_zone           = local.availability_zone
@@ -168,8 +169,9 @@ resource "aws_ebs_volume" "default" {
 }
 
 resource "aws_volume_attachment" "default" {
-  count       = var.ebs_volume_count
-  device_name = var.ebs_device_name[count.index]
-  volume_id   = aws_ebs_volume.default.*.id[count.index]
-  instance_id = join("", aws_instance.default.*.id)
+  count        = var.ebs_volume_count
+  device_name  = var.ebs_device_name[count.index]
+  volume_id    = aws_ebs_volume.default.*.id[count.index]
+  instance_id  = join("", aws_instance.default.*.id)
+  skip_destroy = var.ebs_volume_attachment_skip_destroy
 }

@@ -56,8 +56,8 @@ variable "security_group_rules" {
     }
   ]
   description = <<-EOT
-    A list of maps of Security Group rules. 
-    The values of map is fully complated with `aws_security_group_rule` resource. 
+    A list of maps of Security Group rules.
+    The values of map is fully complated with `aws_security_group_rule` resource.
     To get more info see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule .
   EOT
 }
@@ -293,4 +293,10 @@ variable "kms_key_id" {
   type        = string
   default     = null
   description = "KMS key ID used to encrypt EBS volume. When specifying kms_key_id, ebs_volume_encrypted needs to be set to true"
+}
+
+variable "ebs_volume_attachment_skip_destroy" {
+  type        = bool
+  default     = false
+  description = "Set this to true if you do not wish to detach the volume from the instance to which it is attached at destroy time, and instead just remove the attachment from Terraform state. This is useful when destroying an instance which has volumes attached but they are not being unmounted before the instance is destroyed"
 }
